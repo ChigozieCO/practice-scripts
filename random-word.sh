@@ -5,16 +5,22 @@
 
 word=/usr/share/dict/words
 
-# Check if the user passed an argument and prompt then to.
+# Check if the user passed an argument and prompt then to.if they didn't
 if [ $# == 0 ]; then
 	echo -e "Usage: $0 <word length> \neg $0 7"
 	exit 1
 fi
 
-#The below if statement checks if you have the wordlist file and gives an error code if it doesn't
+# The below if statement checks if you have the wordlist file and gives an error code if it doesn't
 if [ ! -f $word ]; then
 	echo "Wordlist does not exist, consider installing a wordlist"
 	exit 1
+fi
+
+# This if statement checks whether the wordlist has any words as long as the user supplied argument
+if ! grep -q -w "^.\{$1\}$" "$word"; then
+    echo "Oops: The wordlist does not contain any $1 letter words."
+    exit 1
 fi
 
 shuf $word | grep -w "^.\{$1\}$" | head -1
